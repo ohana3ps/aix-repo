@@ -1,0 +1,11 @@
+#!/usr/bin/ksh
+
+HSTN=`hostname`
+#get managed systems model and serial
+prtconf |grep "Machine Serial Number"|awk '{print $4}'
+
+#get entitled cpu
+#lparstat -i|grep -w "Entitled Capacity"|head -n1|awk '{print $4}'
+
+#get memory info in mb
+#lparstat -i|grep "Online Memory"|awk '{print $4}'

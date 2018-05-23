@@ -1,0 +1,24 @@
+#!/usr/bin/ksh
+#############################################################################
+##  Description of script                                                  ##
+##                                                                         ##
+#############################################################################
+#setup csv headers
+#echo "Hostname, OS Level, SSH ver, SSL ver, NetApp ver, CommVault, HPE OMi, Java7 32Bit, Java7 64Bit, Java 8 " >> /local/sysdoc/tmp/software.csv
+
+# Break down into steps
+HSTN=`hostname`
+OS_VER=`oslevel -s`
+ssh -v santa 2> /tmp/sshver.info
+SSH_VER=`head -n1 /tmp/sshver.info|awk '{print $1}'|cut -d _ -f2|sed 's/.$//'`
+SSL_VER=`head -n1 /tmp/sshver.info|awk '{print $3}'`
+rm -r /tmp/sshver.info
+NetApp_VER=`sanlun version 2> /dev/null`
+CV_VER=`/opt/commvault/Base/Galaxy -status|grep Version|awk '{print $3, $4}' 2> /dev/null`
+HPE_VER=`/usr/lpp/OV/bin/ovc -version|awk '{print $4}' 2> /dev/null`
+J7_32B=`lslpp -l|grep -i java|grep Runtime|grep Java7.jre|uniq|awk '{print $2}' 2> /dev/null`
+J7_64B=`lslpp -l|grep -i java|grep Runtime|grep Java71_64.jre|uniq|awk '{print $2}' 2> /dev/null`
+J8_64B=`lslpp -l|grep -i java|grep Runtime|grep Java8|uniq|awk '{print $2}' 2> /dev/null`
+
+# ouput
+echo "$HSTN, $OS_VER, $SSH_VER, $SSL_VER, $NetApp_VER, $CV_VER, $HPE_VER", $J7_32B, $J7_64B, $J8_64B >> /local/sysdoc/tmp/software.csv

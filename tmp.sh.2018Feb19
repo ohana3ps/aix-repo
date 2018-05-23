@@ -1,0 +1,10 @@
+#!/usr/bin/ksh
+for x in `df -g|grep log_dir|awk '{print $7}'`;do df -g $x;done
+echo " "
+for x in `lspv|grep -v rootvg|awk '{print$1}'`;do lspv -l $x|grep -p log_dir|head -n2;lspv -l $x|grep log_dir;done
+echo " "
+for x in `df -g|grep log_dir|awk '{print $7}'`;do df -g $x;done
+echo " "
+for x in `lspv|grep -v rootvg|awk '{print$1}'`;do lspv -l $x|grep -p log_dir|head -n1|sed -n -e 's/.$//p' >> /tmp/tmp.out;done
+while read line; do sanlun lun show |grep $line;done < /tmp/tmp.out
+rm /tmp/tmp.out

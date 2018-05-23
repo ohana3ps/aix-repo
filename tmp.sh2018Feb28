@@ -1,0 +1,4 @@
+#!/usr/bin/ksh
+ps -ef|grep db2sysc|grep -v grep >> /tmp/0002fr30.out
+echo $?
+rm /tmp/0002fr30.out
